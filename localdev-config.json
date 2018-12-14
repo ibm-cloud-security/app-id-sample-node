@@ -1,6 +1,6 @@
 {
   "clientId": "<Client Id>",
-  "oauthServerUrl": "<oAuth Server URL>",
+  "oauthServerUrl": "<OAuth Server URL>",
   "profilesUrl": "<Profiles URL>",
   "secret": "<Client Secret>",
   "tenantId": "<Tenant Id>"
