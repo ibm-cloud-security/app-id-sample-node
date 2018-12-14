@@ -81,7 +81,7 @@ This sample runs on one instance and uses the session to store the authorization
 In order to run it in production mode, use services such as Redis to store the relevant data.
 
 ## Development
-Any changes made to this sample file most also be uploaded to the [App ID Dashboard](https://github.ibm.com/security-services/app-id-dashboard/tree/development/src/server/samples).
+Any changes made to this sample most also be uploaded to the [App ID Dashboard](https://github.ibm.com/security-services/app-id-dashboard/tree/development/src/server/samples).
 
 ## License
 
