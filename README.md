@@ -1,7 +1,7 @@
 # IBM Cloud App ID
 Node Sample App for the IBM Cloud App ID service. You can either run the application locally or in IBM Cloud.
 
-[![IBM Cloud powered][img-ibmcloud-powered]][url-ibmcloud]
+[![](https://img.shields.io/badge/ibm%20cloud-powered-blue.svg)](https://www.ibm.com/cloud/)
 [![Codacy][img-codacy]][url-codacy]
 [![Version][img-version]][url-repo]
 [![DownloadsMonthly][img-downloads-monthly]][url-repo]
