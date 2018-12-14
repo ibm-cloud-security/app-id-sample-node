@@ -32,7 +32,7 @@ authentication server to start the OAuth flow. If the user is authorized, we sho
 
 `routes/token`  This page shows the access and id token payload.
 
-### Requirements
+## Requirements
 * Node 6.0.0 or higher
 
 ## Running Locally
