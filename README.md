@@ -11,17 +11,6 @@ Node Sample App for the IBM Cloud App ID service. You can either run the applica
 [![GithubStars][img-github-stars]][url-github-stars]
 [![GithubForks][img-github-forks]][url-github-forks]
 
-<!---
-[![Codacy][img-codacy]][url-codacy]
-[![Version][img-version]][url-repo]
-[![DownloadsMonthly][img-downloads-monthly]][url-repo]
-[![DownloadsTotal][img-downloads-total]][url-repo]
-[![License][img-license]][url-repo]
-[![GithubWatch][img-github-watchers]][url-github-watchers]
-[![GithubStars][img-github-stars]][url-github-stars]
-[![GithubForks][img-github-forks]][url-github-forks])
--->
-
 ## Table of Contents
 * [Contents](#contents)
 * [Requirements](#requirements)
