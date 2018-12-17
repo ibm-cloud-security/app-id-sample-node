@@ -21,7 +21,6 @@ Node Sample App for the IBM Cloud App ID service. You can either run the applica
 * [Running Locally](#running-locally)
 * [Running in IBM Cloud](#running-in-ibm-cloud)
 * [Clarification](#clarification)
-* [Development](#development)
 * [License](#license)
 
 ## Contents
@@ -79,9 +78,6 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
 ## Clarification
 This sample runs on one instance and uses the session to store the authorization data.
 In order to run it in production mode, use services such as Redis to store the relevant data.
-
-## Development
-Any changes made to this sample most also be uploaded to the [App ID Dashboard](https://github.ibm.com/security-services/app-id-dashboard/tree/development/src/server/samples).
 
 ## License
 
