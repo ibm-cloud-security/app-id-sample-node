@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cloud Land</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="jquery.json-viewer.js"></script>
+    <link rel='stylesheet' href='stylesheets/token.css'/>
+    <link href="stylesheets/jquery.json-viewer.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div class="main-container">
+    <pre id="json-renderer"></pre>
+    <div class="top-container">
+        <div class="flex-top">
+            <a href="/protected"><img class="back-icon" src="images/back.png"></a>
+        </div>
+        <div class="flex-top">
+            <a href="/protected"><p>Back</p></a>
+        </div>
+    </div>
+    <div id="datadiv" class="bottom-container">
+        <div class="flex-bottom">
+            <h1>Access Token</h1>
+            <div id="accessTokenAttributes" class="token-info"></div>
+        </div>
+        <div class="flex-bottom">
+            <h1>ID Token</h1>
+            <div id="idTokenAttributes" class="token-info"></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+	var tokens = JSON.parse('<%- tokens %>');
+
+
+	//alert(JSON.stringify(tokens.accessTokenPayload));
+    $("#datadiv").attr('style', 'visibility: visible');
+
+    $('#accessTokenAttributes').jsonViewer(tokens.accessTokenPayload, {collapsed: false});
+    $('#idTokenAttributes').jsonViewer(tokens.identityTokenPayload, {collapsed: false});
+
+
+	/*
+    // Get the tokens payload from the session and display them
+    var accessTokenInfo = JSON.parse(window.sessionStorage.getItem('accessTokenInfo'));
+    var idTokenInfo = JSON.parse(window.sessionStorage.getItem('idTokenInfo'));
+
+    // Display the information
+      $('#accessTokenAttributes').jsonViewer(accessTokenInfo, {collapsed: false});
+      $('#idTokenAttributes').jsonViewer(idTokenInfo, {collapsed: false});
+      $("#datadiv").attr('style', 'visibility: visible');
+
+    */
+
+</script>
+</body>
+</html>

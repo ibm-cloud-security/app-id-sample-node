@@ -1,0 +1,7 @@
+{
+  "clientId": "<Client Id>",
+  "oauthServerUrl": "<OAuth Server URL>",
+  "profilesUrl": "<Profiles URL>",
+  "secret": "<Client Secret>",
+  "tenantId": "<Tenant Id>"
+}
