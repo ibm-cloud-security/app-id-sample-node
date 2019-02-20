@@ -35,13 +35,17 @@ const RETURNING_USER_HINT = "An identified user returned to the app with the sam
 const NEW_USER_HINT = "An identified user logged in for the first time. Now when he logs in with the same credentials from any device or web client, the app will show his same profile and selections.";
 
 const LOGIN_URL = "/ibm/bluemix/appid/login";
+const LOGIN_URL2 = "/ibm/bluemix/appid/login2";
+
 const CALLBACK_URL = "/ibm/bluemix/appid/callback";
+const CALLBACK_URL2 = "/ibm/bluemix/appid/callback2";
 
 const port = process.env.PORT || 3000;
 
 const isLocal = cfEnv.getAppEnv().isLocal;
 
 const config = getLocalConfig();
+const config2 = getLocalConfig2();
 configureSecurity();
 
 app.use(flash());
@@ -68,7 +72,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 let webAppStrategy = new WebAppStrategy(config);
-passport.use(webAppStrategy);
+passport.use('appid1', webAppStrategy);
+
+let webAppStrategy2 = new WebAppStrategy(config2);
+passport.use('appid2', webAppStrategy2);
 
 // Initialize the user attribute Manager
 userProfileManager.init(config);
@@ -88,8 +95,12 @@ passport.deserializeUser(function(obj, cb) {
 
 // Explicit login endpoint. Will always redirect browser to login widget due to {forceLogin: true}.
 // If forceLogin is set to false redirect to login widget will not occur of already authenticated users.
-app.get(LOGIN_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME, {
+app.get(LOGIN_URL, passport.authenticate('appid1', {
   forceLogin: true
+}));
+
+app.get(LOGIN_URL2, passport.authenticate('appid2', {
+	forceLogin: true
 }));
 
 // Callback to finish the authorization process. Will retrieve access and identity tokens/
@@ -97,7 +108,8 @@ app.get(LOGIN_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME, {
 // 1. the original URL of the request that triggered authentication, as persisted in HTTP session under WebAppStrategy.ORIGINAL_URL key.
 // 2. successRedirect as specified in passport.authenticate(name, {successRedirect: "...."}) invocation
 // 3. application root ("/")
-app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME, {failureRedirect: '/error' ,failureFlash: true ,allowAnonymousLogin: true}));
+app.get(CALLBACK_URL, passport.authenticate('appid1', {failureRedirect: '/error' ,failureFlash: true ,allowAnonymousLogin: true}));
+app.get(CALLBACK_URL2, passport.authenticate('appid2', {failureRedirect: '/error' ,failureFlash: true ,allowAnonymousLogin: true}));
 
 function storeRefreshTokenInCookie(req, res, next) {
 	if (req.session[WebAppStrategy.AUTH_CONTEXT] && req.session[WebAppStrategy.AUTH_CONTEXT].refreshToken) {
@@ -122,7 +134,7 @@ app.get("/protected", function tryToRefreshTokensIfNotLoggedIn(req, res, next) {
 	webAppStrategy.refreshTokens(req, req.cookies.refreshToken).finally(function() {
 		next();
 	});
-}, passport.authenticate(WebAppStrategy.STRATEGY_NAME), storeRefreshTokenInCookie, function (req, res, next) {
+}, passport.authenticate('appid1'), storeRefreshTokenInCookie, function (req, res, next) {
 	var accessToken = req.session[WebAppStrategy.AUTH_CONTEXT].accessToken;
 	var isGuest = req.user.amr[0] === "appid_anon";
 	var isCD = req.user.amr[0] === "cloud_directory";
@@ -153,11 +165,13 @@ app.get("/protected", function tryToRefreshTokensIfNotLoggedIn(req, res, next) {
 
 // Protected area. If current user is not authenticated - an anonymous login process will trigger.
 // In case user is authenticated - a page with current user information will be returned.
-app.get("/anon_login", passport.authenticate(WebAppStrategy.STRATEGY_NAME, {allowAnonymousLogin: true, successRedirect : '/protected', forceLogin: true}));
+app.get("/anon_login", passport.authenticate('appid1', {allowAnonymousLogin: true, successRedirect : '/protected', forceLogin: true}));
 
 // Protected area. If current user is not authenticated - redirect to the login widget will be returned.
 // In case user is authenticated - a page with current user information will be returned.
-app.get("/login", passport.authenticate(WebAppStrategy.STRATEGY_NAME, {successRedirect : '/protected', forceLogin: true}));
+app.get("/login", passport.authenticate('appid1', {successRedirect : '/protected', forceLogin: true}));
+
+app.get("/login2", passport.authenticate('appid2', {successRedirect : '/protected', forceLogin: true}));
 
 app.get("/logout", function(req, res, next) {
 	WebAppStrategy.logout(req);
@@ -168,11 +182,11 @@ app.get("/logout", function(req, res, next) {
 
 
 app.get("/token", function(req, res){
-	//return the token data
+	//return the token data'ee'
 	res.render('token',{tokens: JSON.stringify(req.session[WebAppStrategy.AUTH_CONTEXT])});
 });
 
-app.get("/userInfo", passport.authenticate(WebAppStrategy.STRATEGY_NAME), function(req, res) {
+app.get("/userInfo", passport.authenticate('appid1'), function(req, res) {
 	//return the user info data
 	userProfileManager.getUserInfo(req.session[WebAppStrategy.AUTH_CONTEXT].accessToken).then(function (userInfo) {
 		res.render('userInfo', {userInfo: JSON.stringify(userInfo)});
@@ -186,12 +200,12 @@ app.get('/error', function(req, res) {
 	res.render("error.ejs",{errorMessage: errorArray[0]});
 });
 
-app.get("/change_password", passport.authenticate(WebAppStrategy.STRATEGY_NAME, {
+app.get("/change_password", passport.authenticate('appid1', {
     successRedirect: '/protected',
     show: WebAppStrategy.CHANGE_PASSWORD
 }));
 
-app.get("/change_details", passport.authenticate(WebAppStrategy.STRATEGY_NAME, {
+app.get("/change_details", passport.authenticate('appid1', {
     successRedirect: '/protected',
     show: WebAppStrategy.CHANGE_DETAILS
 }));
@@ -287,6 +301,34 @@ function getLocalConfig() {
 	}
 
 	config['redirectUri'] = `http://localhost:${port}${CALLBACK_URL}`;
+	return config;
+}
+
+function getLocalConfig2() {
+	if (!isLocal) {
+		return {};
+	}
+	let config = {};
+	const localConfig = nconf.env().file(`${__dirname}/localdev-config2.json`).get();
+	const requiredParams = ['clientId', 'secret', 'tenantId', 'oauthServerUrl', 'profilesUrl'];
+	requiredParams.forEach(function (requiredParam) {
+		if (!localConfig[requiredParam]) {
+			console.error('When running locally, make sure to create a file *localdev-config.json* in the root directory. See config.template.json for an example of a configuration file.');
+			console.error(`Required parameter is missing: ${requiredParam}`);
+			process.exit(1);
+		}
+		config[requiredParam] = localConfig[requiredParam];
+	});
+
+	if (localConfig.version) {
+		config.version = localConfig.version;
+	}
+
+	if (localConfig.appidServiceEndpoint) {
+		config.appidServiceEndpoint = localConfig.appidServiceEndpoint;
+	}
+
+	config['redirectUri'] = `http://localhost:${port}${CALLBACK_URL2}`;
 	return config;
 }
 
