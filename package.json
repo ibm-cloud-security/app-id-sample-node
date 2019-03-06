@@ -18,7 +18,7 @@
     "express-session": "^1.15.1",
     "helmet": "^3.6.0",
     "hoek": "^6.1.2",
-    "ibmcloud-appid": "^5.0.0",
+    "ibmcloud-appid": "^6.0.0",
     "jquery.json-viewer": "^1.1.0",
     "nconf": "^0.10.0",
     "passport": "^0.3.2"
