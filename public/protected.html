@@ -47,7 +47,6 @@
 </div>
 
 <script>
-	// $("#maindiv").attr('style', 'visibility: visible');
 	$.getJSON('/idToken', function (id_token) {
 		$('#userNameSpan').html(id_token.name);
 		$('#idTokenPayload').jsonViewer(id_token, {collapsed: false});

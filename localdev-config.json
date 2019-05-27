@@ -1,7 +1,9 @@
 {
-  "clientId": "<Client Id>",
-  "oauthServerUrl": "<OAuth Server URL>",
-  "profilesUrl": "<Profiles URL>",
-  "secret": "<Client Secret>",
-  "tenantId": "<Tenant Id>"
+  "oauthServerUrl": "https://eu-gb.appid.cloud.ibm.com/oauth/v4/50976c64-57df-45ac-bbb6-97d54b46b643",
+  "profilesUrl": "https://eu-gb.appid.cloud.ibm.com",
+  "secret": "MjJlY2JlMDAtNTcyYi00ZTFlLTg0OTQtN2RkNjQ0NzkzZTQz",
+  "tenantId": "50976c64-57df-45ac-bbb6-97d54b46b643",
+  "version": 4,
+  "appidServiceEndpoint": "https://eu-gb.appid.cloud.ibm.com",
+  "clientId": "27296f78-4e30-47d0-8eb8-645aa5ee39db"
 }
