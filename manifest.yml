@@ -1,5 +1,0 @@
-applications:
-- name: App-ID-test-alias
-  memory: 256M
-  services:
-  - App-ID-test-alias
