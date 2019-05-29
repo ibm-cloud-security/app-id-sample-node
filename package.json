@@ -8,7 +8,6 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@ibm/plex": "^1.4.1",
     "cfenv": "^1.0.3",
     "express": "^4.13.4",
     "express-session": "^1.15.1",
