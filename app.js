@@ -90,6 +90,5 @@ function getLocalConfig(){
 		return {};
 	}
 	const config = require('./localdev-config.json');
-	config['redirectUri'] = `http://localhost:${port}${CALLBACK_URL}`; //TODO: should be added to .json from dashboard
 	return config;
 }
