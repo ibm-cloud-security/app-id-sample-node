@@ -21,15 +21,13 @@ Node Sample Template App for the IBM Cloud App ID service. The App ID Dashboard 
 
 ## Contents
 
-`app.js`  Uses Express to set the routes and views.
+`app.js`  Uses Express to set the routes.
 
-`views/index.html`  The application landing page. Click **Login** to start.
+`public/index.html`  The application landing page. Click **Login** to start.
 
-`routes/protected`  After clicking the **Login** button, the user is redirected here. This is where
+`public/protected.html`  The application's protected page. After clicking the **Login** button, the user is redirected here. This is where
 we check whether the user is authorized or not. In  the case where the user is not authorized, we send a request to the
 authentication server to start the OAuth flow. If the user is authorized, we show the protected data.
-
-`routes/token`  This page shows the access and id token payload.
 
 ## Requirements
 * Node 6.0.0 or higher
@@ -51,25 +49,33 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
 
 ### Deployment
 
-**Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Identity Providers" -> "Manage" page in the AppID dashboard.
+**Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Manage Authentication" -> "Authentication Settings" page in the AppID dashboard.
 
 1. Login to IBM Cloud.
 
-  `bx login https://api.{{domain}}`
+  `ibmcloud login -a https://api.{{domain}}`
 
 2. Target a Cloud Foundry organization and space in which you have at least Developer role access:
 
-  Use `bx target --cf` to target Cloud Foundry org/space interactively.
+  Use `ibmcloud target --cf` to target Cloud Foundry org/space interactively.
 
 3. Bind the sample app to the instance of App ID:
 
-  `bx resource service-alias-create "appIDInstanceName-alias" --instance-name "appIDInstanceName" -s {{space}}`
+  `ibmcloud resource service-alias-create "appIDInstanceName-alias" --instance-name "appIDInstanceName" -s {{space}}`
+  
+4. Add the alias to the manifest.yml file in the sample app.
 
-4. Deploy the sample application to IBM Cloud.
+   `applications:
+        - name: [app-instance-name]
+        memory: 256M
+        services:
+        - appIDInstanceName-alias`
 
-  `bx app push`
+5. Deploy the sample application to IBM Cloud. From the app's folder do:
 
-5. Open your IBM Cloud app route in the browser.
+  `ibmcloud app push`
+
+6. Open your IBM Cloud app route in the browser.
 
 ## Clarification
 This sample runs on one instance and uses the session to store the authorization data.
