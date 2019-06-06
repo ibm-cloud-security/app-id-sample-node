@@ -81,6 +81,10 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
 This sample runs on one instance and uses the session to store the authorization data.
 In order to run it in production mode, use services such as Redis to store the relevant data.
 
+## See More
+#### Protecting Node.js Web Applications with IBM Cloud App ID
+https://www.youtube.com/watch?v=6roa1ZOvwtw
+
 ## License
 
 Copyright (c) 2019 IBM Corporation
