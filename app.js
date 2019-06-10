@@ -15,8 +15,6 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const appID = require("ibmcloud-appid");
-const cfEnv = require("cfenv");
-const isLocal = cfEnv.getAppEnv().isLocal; //TODO: find better way to decide if local
 
 const WebAppStrategy = appID.WebAppStrategy;
 
@@ -34,11 +32,7 @@ app.use(session({
 	secret: "123456",
 	resave: true,
 	saveUninitialized: true,
-	proxy: true,
-	cookie: {
-		httpOnly: true,
-		secure: !isLocal
-	}
+	proxy: true
 }));
 
 // Configure express application to use passportjs
@@ -81,14 +75,24 @@ app.get('/error', (req, res) => {
 	res.send('Authentication Error');
 });
 
-app.listen(port,  ()  => {
+app.listen(port, () => {
 	console.log("Listening on http://localhost:" + port);
 });
 
-function getLocalConfig(){
-	if(!isLocal){
-		return {};
+function getLocalConfig() {
+	let config;
+	
+	try {
+		// if running locally we'll have the local config file
+		config = require('./localdev-config.json');
+	} catch (e) {
+		if (process.env.APPID_SERVICE_BINDING) { // if running on Kubernetes this env variable would be defined
+			config = JSON.parse(process.env.APPID_SERVICE_BINDING);
+			config.redirectUri = process.env.redirectUri;
+		} else { // running on CF
+			return {};
+		}
 	}
-	const config = require('./localdev-config.json');
+
 	return config;
 }

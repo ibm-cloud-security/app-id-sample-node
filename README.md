@@ -41,7 +41,7 @@ npm start
 ```
 Use the link http://localhost:3000 to load the web application in browser.
 
-## Running in IBM Cloud
+## Running in Cloud Foundry
 
 ### Prerequisites
 Before you begin, make sure that IBM Cloud CLI is installed.
@@ -76,6 +76,56 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
   `ibmcloud app push`
 
 6. Open your IBM Cloud app route in the browser.
+
+## Running in Kubernetes
+
+### Prerequisites
+Before you begin make sure that IBM Cloud CLI, docker and kubectl installed and that you have a running kubernetes cluster.
+You also need an IBM Cloud container registry namespace. You can find your registry-domain and repository namespace using `ibmcloud cr namespaces`.
+
+### Deployment
+
+**Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Manage Authentication" -> "Authentication Settings" page in the AppID dashboard.
+
+1. Login to IBM Cloud.
+
+    `ibmcloud login -a https://api.{{domain}}`
+  
+2. Run the following command, and copy and paste it's output (which is an export command):
+
+    `ibmcloud cs cluster-config {CLUSTER_NAME}`
+
+3. Bind the instance of App ID to your cluster.
+
+    `ibmcloud cs cluster-service-bind {CLUSTER_NAME} default {APP_ID_INSTANCE_NAME}`
+    
+4. Find you cluster's public IP:
+
+    `ibmcloud cs workers {CLUSTER_NAME}`
+
+5. Edit the kube_deployment.yml file. 
+    1. Edit the image field of the deployment section to match your image name. The name of your image should be `{REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-liberty:{APP_VERSION}`). 
+    2. Edit the Binding name field to match yours. It should be `binding-{App_ID_INSTANCE_NAME}`.
+    3. Edit redirectUri's value to include your cluster's IP. The value should be `http://{CLUSTER_IP}/ibm/bluemix/appid/callback`
+    4. Optional: Change the value of metadata.namespace from default to your cluster namespace if you’re using a different namespace.
+
+6. Build your Docker image.
+   
+    `docker build -t {REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION} .`
+    
+7. Push the image.
+   
+    `docker push {REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}`
+   
+    `kubectl apply -f kube_deployment.yml`
+
+8. Now configure the OAuth redirect URL at the App ID dashboard so it will approve redirecting to your cluster. Go to your App ID instance at [IBM Cloud console](https://cloud.ibm.com/resources) and under Manage Authentication->Authentication Settings->Add web redirect URLs add the following URL:
+
+   `https://{CLUSTER_IP}:30000/ibm/bluemix/appid/callback`
+
+9. You can see your sample running on Kubernetes in IBM Cloud.
+   
+    `open http://{CLUSTER_IP}:30000`
 
 ## Clarification
 This sample runs on one instance and uses the session to store the authorization data.
