@@ -113,7 +113,7 @@ You also need an IBM Cloud container registry namespace (see https://cloud.ibm.c
 
 6. Edit the kube_deployment.yml file. 
     1. Edit the image field of the deployment section to match your image name. The name of your image should be `{REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}`). 
-    2. Edit the Binding name field to match yours. It should be `binding-{App_ID_INSTANCE_NAME}`.
+    2. Edit the Binding name field to match yours. It should be `binding-{APP_ID_INSTANCE_NAME}`.
     3. Edit redirectUri's value to include your cluster's IP. The value should be `http://{CLUSTER_ENDPOINT}/ibm/bluemix/appid/callback`
     4. Optional: Change the value of metadata.namespace from default to your cluster namespace if you’re using a different namespace.
 
