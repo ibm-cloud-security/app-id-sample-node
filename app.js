@@ -160,7 +160,7 @@ app.get("/anon_login", passport.authenticate(WebAppStrategy.STRATEGY_NAME, {allo
 app.get("/login", passport.authenticate(WebAppStrategy.STRATEGY_NAME, {successRedirect : '/protected', forceLogin: true}));
 
 app.get("/logout", function(req, res, next) {
-	WebAppStrategy.logout(req);
+	webAppStrategy.logout(req);
 	// If you chose to store your refresh-token, don't forgot to clear it also in logout:
 	res.clearCookie("refreshToken");
 	res.redirect("/");
@@ -215,7 +215,7 @@ app.use('/', function(req, res, next) {
 
 app.use(function(err, req, res, next) {
 	if (err instanceof UnauthorizedException) {
-		WebAppStrategy.logout(req);
+		webAppStrategy.logout(req);
 		res.redirect('/');
 	} else {
 		next(err);
