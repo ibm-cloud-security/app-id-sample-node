@@ -65,11 +65,13 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
   
 4. Add the alias to the manifest.yml file in the sample app.
 
-   `applications:
+   ```
+   applications:
         - name: [app-instance-name]
         memory: 256M
         services:
-        - appIDInstanceName-alias`
+        - appIDInstanceName-alias
+   ```
 
 5. Deploy the sample application to IBM Cloud. From the app's folder do:
 
@@ -81,7 +83,7 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
 
 ### Prerequisites
 Before you begin make sure that IBM Cloud CLI, docker and kubectl installed and that you have a running kubernetes cluster.
-You also need an IBM Cloud container registry namespace. You can find your registry-domain and repository namespace using `ibmcloud cr namespaces`.
+You also need an IBM Cloud container registry namespace (see https://cloud.ibm.com/kubernetes/registry/main/start). You can find your registry domain and repository namespace using `ibmcloud cr namespaces`.
 
 ### Deployment
 
@@ -91,41 +93,47 @@ You also need an IBM Cloud container registry namespace. You can find your regis
 
     `ibmcloud login -a https://api.{{domain}}`
   
-2. Run the following command, and copy and paste it's output (which is an export command):
+2. Run the following command, it will output an export command.
 
     `ibmcloud cs cluster-config {CLUSTER_NAME}`
+    
+3. Set the KUBECONFIG environment variable. Copy the output from the previous command and paste it in your terminal. The command output looks similar to the following example:
+   
+    `export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/mycluster/kube-config-hou02-mycluster.yml`
 
-3. Bind the instance of App ID to your cluster.
+4. Bind the instance of App ID to your cluster.
 
     `ibmcloud cs cluster-service-bind {CLUSTER_NAME} default {APP_ID_INSTANCE_NAME}`
     
-4. Find you cluster's public IP:
+5. Find your cluster's public endpoint {CLUSTER_ENDPOINT}.
+   
+   Note: If you are using the free version of kubernetes (with only 1 worker node) you can use your node's public IP instead, which you can find using:
 
     `ibmcloud cs workers {CLUSTER_NAME}`
 
-5. Edit the kube_deployment.yml file. 
-    1. Edit the image field of the deployment section to match your image name. The name of your image should be `{REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-liberty:{APP_VERSION}`). 
+6. Edit the kube_deployment.yml file. 
+    1. Edit the image field of the deployment section to match your image name. The name of your image should be `{REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}`). 
     2. Edit the Binding name field to match yours. It should be `binding-{App_ID_INSTANCE_NAME}`.
-    3. Edit redirectUri's value to include your cluster's IP. The value should be `http://{CLUSTER_IP}/ibm/bluemix/appid/callback`
+    3. Edit redirectUri's value to include your cluster's IP. The value should be `http://{CLUSTER_ENDPOINT}/ibm/bluemix/appid/callback`
     4. Optional: Change the value of metadata.namespace from default to your cluster namespace if you’re using a different namespace.
 
-6. Build your Docker image.
+7. Build your Docker image.
    
     `docker build -t {REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION} .`
     
-7. Push the image.
+8. Push the image.
    
     `docker push {REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}`
    
     `kubectl apply -f kube_deployment.yml`
 
-8. Now configure the OAuth redirect URL at the App ID dashboard so it will approve redirecting to your cluster. Go to your App ID instance at [IBM Cloud console](https://cloud.ibm.com/resources) and under Manage Authentication->Authentication Settings->Add web redirect URLs add the following URL:
+9. Now configure the OAuth redirect URL at the App ID dashboard so it will approve redirecting to your cluster. Go to your App ID instance at [IBM Cloud console](https://cloud.ibm.com/resources) and under Manage Authentication->Authentication Settings->Add web redirect URLs add the following URL:
 
-   `https://{CLUSTER_IP}:30000/ibm/bluemix/appid/callback`
+   `https://{CLUSTER_ENDPOINT}:30000/ibm/bluemix/appid/callback`
 
-9. You can see your sample running on Kubernetes in IBM Cloud.
+10. You can see your sample running on Kubernetes in IBM Cloud.
    
-    `open http://{CLUSTER_IP}:30000`
+    `open http://{CLUSTER_ENDPOINT}:30000`
 
 ## Clarification
 This sample runs on one instance and uses the session to store the authorization data.

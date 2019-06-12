@@ -39,7 +39,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-let webAppStrategy = new WebAppStrategy(getLocalConfig());
+let webAppStrategy = new WebAppStrategy(getAppIDConfig());
 passport.use(webAppStrategy);
 
 // Configure passportjs with user serialization/deserialization. This is required
@@ -79,7 +79,7 @@ app.listen(port, () => {
 	console.log("Listening on http://localhost:" + port);
 });
 
-function getLocalConfig() {
+function getAppIDConfig() {
 	let config;
 	
 	try {
