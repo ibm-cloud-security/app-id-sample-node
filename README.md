@@ -76,8 +76,14 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
 5. Deploy the sample application to IBM Cloud. From the app's folder do:
 
   `ibmcloud app push`
+  
+6. Now configure the OAuth redirect URL at the App ID dashboard so it will approve redirecting to your cluster. Go to your App ID instance at [IBM Cloud console](https://cloud.ibm.com/resources) and under Manage Authentication->Authentication Settings->Add web redirect URLs add the following URL:
 
-6. Open your IBM Cloud app route in the browser.
+   `https://{App Domain}/ibm/bluemix/appid/callback`
+   
+   You find your app's domain by visiting Cloud Foundry Apps at the IBM Cloud dashboard: https://cloud.ibm.com/resources.
+
+7. Open your IBM Cloud app route in the browser.
 
 ## Running in Kubernetes
 
@@ -88,6 +94,8 @@ You also need an IBM Cloud container registry namespace (see https://cloud.ibm.c
 ### Deployment
 
 **Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Manage Authentication" -> "Authentication Settings" page in the AppID dashboard.
+
+**Note:** Your App ID instance name must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character. You can visit the App ID dashboard to change your instance name. 
 
 1. Login to IBM Cloud.
 
