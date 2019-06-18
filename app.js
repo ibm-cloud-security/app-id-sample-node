@@ -55,11 +55,14 @@ passport.deserializeUser((obj, cb) => cb(null, obj));
 // 3. application root ("/")
 app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME, {failureRedirect: '/error'}));
 
-// Protecting the protected page. When the user is authenticated, the protected.html page will be served
-app.get("/protected.html", passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+// Protect everything under /protected
+app.use("/protected", passport.authenticate(WebAppStrategy.STRATEGY_NAME));
 
-// This will statically serve pages (after authentication if required):
+// This will statically serve pages:
 app.use(express.static("public"));
+
+// // This will statically serve the protected page (after authentication, since /protected is a protected area):
+app.use('/protected', express.static("protected"));
 
 app.get("/logout", (req, res) => {
 	WebAppStrategy.logout(req);
