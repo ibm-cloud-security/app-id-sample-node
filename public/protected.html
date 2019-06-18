@@ -47,7 +47,7 @@
 </div>
 
 <script>
-	$.getJSON('/idToken', function (id_token) {
+	$.getJSON('/idPayload', function (id_token) {
 		$('#userNameSpan').html(id_token.name);
 		$('#idTokenPayload').jsonViewer(id_token, {collapsed: false});
 	});

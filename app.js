@@ -20,7 +20,7 @@ const WebAppStrategy = appID.WebAppStrategy;
 
 const app = express();
 
-const CALLBACK_URL = "/ibm/bluemix/appid/callback";
+const CALLBACK_URL = "/ibm/cloud/appid/callback";
 
 const port = process.env.PORT || 3000;
 
@@ -67,7 +67,7 @@ app.get("/logout", (req, res) => {
 });
 
 //Serves the identity token payload
-app.get("/idToken", passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
+app.get("/idPayload", passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
 	res.send(req.session[WebAppStrategy.AUTH_CONTEXT].identityTokenPayload);
 });
 
@@ -90,9 +90,9 @@ function getAppIDConfig() {
 			config = JSON.parse(process.env.APPID_SERVICE_BINDING);
 			config.redirectUri = process.env.redirectUri;
 		} else { // running on CF
-			return {};
+			let vcapApplication = JSON.parse(process.env["VCAP_APPLICATION"]);
+			return {"redirectUri" : "https://" + vcapApplication["application_uris"][0] + CALLBACK_URL};
 		}
 	}
-
 	return config;
 }
