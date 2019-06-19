@@ -70,7 +70,7 @@ app.get("/logout", (req, res) => {
 });
 
 //Serves the identity token payload
-app.get("/idPayload", passport.authenticate(WebAppStrategy.STRATEGY_NAME), (req, res) => {
+app.get("/protected/api/idPayload", (req, res) => {
 	res.send(req.session[WebAppStrategy.AUTH_CONTEXT].identityTokenPayload);
 });
 
