@@ -24,7 +24,7 @@ spec:
            - containerPort: 80
            env:
            - name: redirectUri
-             value: "http://{CLUSTER_ENDPOINT}:30000/ibm/bluemix/appid/callback" # <-- edit here
+             value: "http://{CLUSTER_ENDPOINT}:30000/ibm/cloud/appid/callback" # <-- edit here
            - name: APPID_SERVICE_BINDING
              valueFrom:
                secretKeyRef:
