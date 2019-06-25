@@ -25,8 +25,8 @@ Node Sample Template App for the IBM Cloud App ID service. The App ID Dashboard 
 
 `public/index.html`  The application landing page. Click **Login** to start.
 
-`public/protected.html`  The application's protected page. After clicking the **Login** button, the user is redirected here. This is where
-we check whether the user is authorized or not. In  the case where the user is not authorized, we send a request to the
+`protected/protected.html`  The application's protected page. After clicking the **Login** button, the user is redirected here. This is where
+we check whether the user is authorized or not. In the case where the user is not authorized, we send a request to the
 authentication server to start the OAuth flow. If the user is authorized, we show the protected data.
 
 ## Requirements
