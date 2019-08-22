@@ -147,6 +147,10 @@ You also need an IBM Cloud container registry namespace (see https://cloud.ibm.c
 This sample runs on one instance and uses the session to store the authorization data.
 In order to run it in production mode, use services such as Redis to store the relevant data.
 
+
+## Got Questions?
+Join us on [Slack](https://www.ibm.com/cloud/blog/announcements/get-help-with-ibm-cloud-app-id-related-questions-on-slack) and chat with our dev team.
+
 ## See More
 #### Protecting Node.js Web Applications with IBM Cloud App ID
 https://www.youtube.com/watch?v=6roa1ZOvwtw
