@@ -12,29 +12,6 @@ body {
     align-items: flex-start;
 }
 
-h1 {
-    font-family: Arial;
-    font-weight: normal;
-    font-size: 36px;
-    color: #20343E;
-}
-
-h2 {
-    font-family: Arial;
-    font-weight: normal;
-    font-size: 20px;
-    color: #20343E;
-    line-height: 24px;
-}
-
-h3 {
-    font-family: Arial;
-    font-size: 14px;
-    color: #42535C;
-    line-height: 20px;
-    display: inline;
-}
-
 .main-container {
     flex: 1 1 100%;
     display: flex;
@@ -46,27 +23,10 @@ h3 {
     display: -webkit-flex;
 }
 
-.top-container {
-    align-items: center;
-    max-height: 50%;
-    min-height: 50%;
-    max-width: 100%;
-    width: 100%;
-    background: #EFF2F5;
-    box-shadow: 0 2px 2px 0 rgba(140, 155, 165, 0.25);
-    overflow: hidden;
-    padding-top: 30px;
-    padding-bottom: 30px;
-}
-
 .bottom-container {
-    width: 100%;
-    background: white;
-    overflow: hidden;
+    margin-top: 145px;
     display: flex;
-    flex-flow: row nowrap;
     justify-content: center;
-    margin-top: 4.5%;
 }
 
 .flex-top {
@@ -76,43 +36,50 @@ h3 {
 }
 
 .flex-bottom {
-    font-family: Arial;
-    font-weight: normal;
-    flex: none;
+    font-family: IBMPlexSans-Medium;
     font-size: 14px;
     color: #42535C;
+    letter-spacing: 0;
     line-height: 20px;
+    font-weight: normal;
+    flex: none;
     margin-right: 5px;
     margin-left: 5px;
 }
 
-.img-circle {
-    border-radius: 50%;
-}
-
 .text-div {
-    flex: 1;
+    font-family: IBMPlexSans-Light;
+    font-size: 20px;
+    color: #152935;
+    letter-spacing: 0;
     text-align: center;
+    line-height: 24px;
+    flex: 1;
+    margin-bottom: 59px;
 }
 
 .button {
-    font-family: Arial;
-    font-weight: bold;
+    font-family: IBMPlexSans-Medium;
+    font-size: 14px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: center;
     background-color: #4178BE;
     border: none;
-    color: #FFFFFF;
     padding: 10px 40px;
-    text-align: center;
     text-decoration: none;
-    font-size: 14px;
-    margin-bottom: 10px;
     cursor: pointer;
-    min-width: 200px;
+    width: 158px;
+    height: 40px;
+    margin-bottom: 4px;
 }
 
-.hint {
-    display: flex;
-    flex: 1;
-    flex-flow: column nowrap;
-    align-items: center;
+.logo-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 41px;
+    margin-top: 81px;
 }

@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+   name: appid-sample-deployment
+   namespace: default
+spec:
+   revisionHistoryLimit: 10
+   minReadySeconds: 10
+   strategy:
+      type: RollingUpdate
+      rollingUpdate:
+         maxUnavailable: 0
+         maxSurge: 3
+   replicas: 1
+   template:
+      metadata:
+         labels:
+            microservice: appid-sample
+      spec:
+         containers:
+         - name: appid-sample
+           image: "{REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}" # <-- edit here
+           ports:
+           - containerPort: 80
+           env:
+           - name: redirectUri
+             value: "http://{CLUSTER_ENDPOINT}:30000/ibm/cloud/appid/callback" # <-- edit here
+           - name: APPID_SERVICE_BINDING
+             valueFrom:
+               secretKeyRef:
+                 name: binding-{APP_ID_INSTANCE_NAME} # <-- edit here
+                 key: binding
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appid-sample-service
+spec:
+  selector:
+    microservice: appid-sample
+  type: NodePort
+  ports:
+   - port: 80
+     nodePort: 30000
+     # In an IBM Cloud Container Service Lite Cluster, we have to create the services with Node ports that have non standard ports in the 30000-32767 range.

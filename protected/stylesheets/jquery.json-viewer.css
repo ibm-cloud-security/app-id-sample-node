@@ -1,6 +1,6 @@
 /* Syntax highlighting for JSON objects */
 ul.json-dict, ol.json-array {
-  font-weight: bold;
+  font-weight: normal;
   list-style-type: none;
   margin: 0 0 0 1px;
   border-left: 1px dotted #ccc;

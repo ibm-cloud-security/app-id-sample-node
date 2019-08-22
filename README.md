@@ -21,15 +21,13 @@ Node Sample Template App for the IBM Cloud App ID service. The App ID Dashboard 
 
 ## Contents
 
-`app.js`  Uses Express to set the routes and views.
+`app.js`  Uses Express to set the routes.
 
-`views/index.html`  The application landing page. Click **Login** to start.
+`public/index.html`  The application landing page. Click **Login** to start.
 
-`routes/protected`  After clicking the **Login** button, the user is redirected here. This is where
-we check whether the user is authorized or not. In  the case where the user is not authorized, we send a request to the
+`protected/protected.html`  The application's protected page. After clicking the **Login** button, the user is redirected here. This is where
+we check whether the user is authorized or not. In the case where the user is not authorized, we send a request to the
 authentication server to start the OAuth flow. If the user is authorized, we show the protected data.
-
-`routes/token`  This page shows the access and id token payload.
 
 ## Requirements
 * Node 6.0.0 or higher
@@ -43,44 +41,123 @@ npm start
 ```
 Use the link http://localhost:3000 to load the web application in browser.
 
-## Running in IBM Cloud
+## Running in Cloud Foundry
 
 ### Prerequisites
 Before you begin, make sure that IBM Cloud CLI is installed.
-For more information visit: https://console.bluemix.net/docs/cli/reference/bluemix_cli/get_started.html#getting-started.
+For more information visit: https://cloud.ibm.com/docs/cli?topic=cloud-cli-getting-started.
 
 ### Deployment
 
-**Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Identity Providers" -> "Manage" page in the AppID dashboard.
+**Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Manage Authentication" -> "Authentication Settings" page in the AppID dashboard.
 
 1. Login to IBM Cloud.
 
-  `bx login https://api.{{domain}}`
+  `ibmcloud login -a https://api.{{domain}}`
 
 2. Target a Cloud Foundry organization and space in which you have at least Developer role access:
 
-  Use `bx target --cf` to target Cloud Foundry org/space interactively.
+  Use `ibmcloud target --cf` to target Cloud Foundry org/space interactively.
 
 3. Bind the sample app to the instance of App ID:
 
-  `bx resource service-alias-create "appIDInstanceName-alias" --instance-name "appIDInstanceName" -s {{space}}`
+  `ibmcloud resource service-alias-create "appIDInstanceName-alias" --instance-name "appIDInstanceName" -s {{space}}`
+  
+4. Add the alias to the manifest.yml file in the sample app.
 
-4. Deploy the sample application to IBM Cloud.
+   ```
+   applications:
+        - name: [app-instance-name]
+        memory: 256M
+        services:
+        - appIDInstanceName-alias
+   ```
 
-  `bx app push`
+5. Deploy the sample application to IBM Cloud. From the app's folder do:
 
-5. Open your IBM Cloud app route in the browser.
+  `ibmcloud app push`
+  
+6. Now configure the OAuth redirect URL at the App ID dashboard so it will approve redirecting to your cluster. Go to your App ID instance at [IBM Cloud console](https://cloud.ibm.com/resources) and under Manage Authentication->Authentication Settings->Add web redirect URLs add the following URL:
+
+   `https://{App Domain}/ibm/cloud/appid/callback`
+   
+   You find your app's domain by visiting Cloud Foundry Apps at the IBM Cloud dashboard: https://cloud.ibm.com/resources.
+
+7. Open your IBM Cloud app route in the browser.
+
+## Running in Kubernetes
+
+### Prerequisites
+Before you begin make sure that IBM Cloud CLI, docker and kubectl installed and that you have a running kubernetes cluster.
+You also need an IBM Cloud container registry namespace (see https://cloud.ibm.com/kubernetes/registry/main/start). You can find your registry domain and repository namespace using `ibmcloud cr namespaces`.
+
+### Deployment
+
+**Important:** Before going live, remove http://localhost:3000/* from the list of web redirect URLs located in "Manage Authentication" -> "Authentication Settings" page in the AppID dashboard.
+
+**Note:** Your App ID instance name must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character. You can visit the App ID dashboard to change your instance name. 
+
+1. Login to IBM Cloud.
+
+    `ibmcloud login -a https://api.{{domain}}`
+  
+2. Run the following command, it will output an export command.
+
+    `ibmcloud cs cluster-config {CLUSTER_NAME}`
+    
+3. Set the KUBECONFIG environment variable. Copy the output from the previous command and paste it in your terminal. The command output looks similar to the following example:
+   
+    `export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/mycluster/kube-config-hou02-mycluster.yml`
+
+4. Bind the instance of App ID to your cluster.
+
+    `ibmcloud cs cluster-service-bind {CLUSTER_NAME} default {APP_ID_INSTANCE_NAME}`
+    
+5. Find your cluster's public endpoint {CLUSTER_ENDPOINT}.
+   
+   Note: If you are using the free version of kubernetes (with only 1 worker node) you can use your node's public IP instead, which you can find using:
+
+    `ibmcloud cs workers {CLUSTER_NAME}`
+
+6. Edit the kube_deployment.yml file. 
+    1. Edit the image field of the deployment section to match your image name. The name of your image should be `{REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}`). 
+    2. Edit the Binding name field to match yours. It should be `binding-{APP_ID_INSTANCE_NAME}`.
+    3. Edit redirectUri's value to include your cluster's IP. The value should be `http://{CLUSTER_ENDPOINT}/ibm/cloud/appid/callback`
+    4. Optional: Change the value of metadata.namespace from default to your cluster namespace if you’re using a different namespace.
+
+7. Build your Docker image.
+   
+    `docker build -t {REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION} .`
+    
+8. Push the image.
+   
+    `docker push {REGISTRY_DOMAIN}/{REPOSITORY_NAMESPACE}/appid-node-sample:{APP_VERSION}`
+   
+    `kubectl apply -f kube_deployment.yml`
+
+9. Now configure the OAuth redirect URL at the App ID dashboard so it will approve redirecting to your cluster. Go to your App ID instance at [IBM Cloud console](https://cloud.ibm.com/resources) and under Manage Authentication->Authentication Settings->Add web redirect URLs add the following URL:
+
+   `https://{CLUSTER_ENDPOINT}:30000/ibm/cloud/appid/callback`
+
+10. You can see your sample running on Kubernetes in IBM Cloud.
+   
+    `open http://{CLUSTER_ENDPOINT}:30000`
 
 ## Clarification
 This sample runs on one instance and uses the session to store the authorization data.
 In order to run it in production mode, use services such as Redis to store the relevant data.
 
-Got Questions?
+
+## Got Questions?
 Join us on [Slack](https://www.ibm.com/cloud/blog/announcements/get-help-with-ibm-cloud-app-id-related-questions-on-slack) and chat with our dev team.
+
+## See More
+#### Protecting Node.js Web Applications with IBM Cloud App ID
+https://www.youtube.com/watch?v=6roa1ZOvwtw
 
 ## License
 
-Copyright (c) 2018 IBM Corporation
+Copyright (c) 2019 IBM Corporation
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
