@@ -75,6 +75,9 @@ For more information visit: https://console.bluemix.net/docs/cli/reference/bluem
 This sample runs on one instance and uses the session to store the authorization data.
 In order to run it in production mode, use services such as Redis to store the relevant data.
 
+Got Questions?
+Join us on [Slack](https://www.ibm.com/cloud/blog/announcements/get-help-with-ibm-cloud-app-id-related-questions-on-slack) and chat with our dev team.
+
 ## License
 
 Copyright (c) 2018 IBM Corporation
