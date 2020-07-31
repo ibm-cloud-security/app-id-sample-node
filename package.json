@@ -1,6 +1,6 @@
 {
   "name": "WebSdkExample-Starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "App ID web application sample",
   "main": "app.js",
   "private": true,
@@ -11,7 +11,7 @@
     "cfenv": "^1.2.2",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "ibmcloud-appid": "^6.1.0",
+    "ibmcloud-appid": "^6.1.1",
     "jquery.json-viewer": "^1.4.0",
     "passport": "^0.4.1"
   }
