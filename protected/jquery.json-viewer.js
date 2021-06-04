@@ -51,7 +51,7 @@
           html += '<li>'
           // Add toggle button if item is collapsable
           if (isCollapsable(json[i])) {
-            html += '<a href class="json-toggle"></a>';
+            html += '<span class="json-toggle"></span>';
           }
           html += json2html(json[i], options);
           // Add comma if item is not last
@@ -77,7 +77,7 @@
               '<span class="json-string">"' + key + '"</span>' : key;
             // Add toggle button if item is collapsable
             if (isCollapsable(json[key])) {
-              html += '<a href class="json-toggle">' + keyRepr + '</a>';
+              html += '<span class="json-toggle">' + keyRepr + '</span>';
             }
             else {
               html += keyRepr;
@@ -112,14 +112,14 @@
       // Transform to HTML
       var html = json2html(json, options)
       if (isCollapsable(json))
-        html = '<a href class="json-toggle"></a>' + html;
+        html = '<span class="json-toggle"></span>' + html;
 
       // Insert HTML in target DOM element
       $(this).html(html);
 
       // Bind click on toggle buttons
       $(this).off('click');
-      $(this).on('click', 'a.json-toggle', function() {
+      $(this).on('click', 'span.json-toggle', function() {
         var target = $(this).toggleClass('collapsed').siblings('ul.json-dict, ol.json-array');
         target.toggle();
         if (target.is(':visible')) {
@@ -135,13 +135,13 @@
 
       // Simulate click on toggle button when placeholder is clicked
       $(this).on('click', 'a.json-placeholder', function() {
-        $(this).siblings('a.json-toggle').click();
+        $(this).siblings('span.json-toggle').click();
         return false;
       });
 
       if (options.collapsed == true) {
         // Trigger click to collapse all nodes
-        $(this).find('a.json-toggle').click();
+        $(this).find('span.json-toggle').click();
       }
     });
   };

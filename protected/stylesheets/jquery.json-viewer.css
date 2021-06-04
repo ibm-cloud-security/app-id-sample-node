@@ -14,15 +14,15 @@ ul.json-dict, ol.json-array {
 }
 
 /* Toggle button */
-a.json-toggle {
+span.json-toggle {
   position: relative;
   color: inherit;
   text-decoration: none;
 }
-a.json-toggle:focus {
+span.json-toggle:focus {
   outline: none;
 }
-a.json-toggle:before {
+span.json-toggle:before {
   color: #aaa;
   content: "\25BC"; /* down arrow */
   position: absolute;
@@ -30,7 +30,7 @@ a.json-toggle:before {
   width: 1em;
   left: -1em;
 }
-a.json-toggle.collapsed:before {
+span.json-toggle.collapsed:before {
   content: "\25B6"; /* left arrow */
 }
 
