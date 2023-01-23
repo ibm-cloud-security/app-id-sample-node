@@ -53,10 +53,10 @@ passport.deserializeUser((obj, cb) => cb(null, obj));
 // 1. the original URL of the request that triggered authentication, as persisted in HTTP session under WebAppStrategy.ORIGINAL_URL key.
 // 2. successRedirect as specified in passport.authenticate(name, {successRedirect: "...."}) invocation
 // 3. application root ("/")
-app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME, {failureRedirect: '/error'}));
+app.get(CALLBACK_URL, passport.authenticate(WebAppStrategy.STRATEGY_NAME, { failureRedirect: '/error', session: false }));
 
 // Protect everything under /protected
-app.use("/protected", passport.authenticate(WebAppStrategy.STRATEGY_NAME));
+app.use("/protected", passport.authenticate(WebAppStrategy.STRATEGY_NAME, { session: false }));
 
 // This will statically serve pages:
 app.use(express.static("public"));
@@ -64,10 +64,16 @@ app.use(express.static("public"));
 // // This will statically serve the protected page (after authentication, since /protected is a protected area):
 app.use('/protected', express.static("protected"));
 
+//Do manually while WebAppStrategy.logout() is being fixed
 app.get("/logout", (req, res) => {
 	//Note: if you enabled SSO for Cloud Directory be sure to use webAppStrategy.logoutSSO instead.
-	WebAppStrategy.logout(req);
-	res.redirect("/");
+	delete req.session.returnTo;
+	delete req.session[WebAppStrategy.AUTH_CONTEXT];
+	delete req.session[WebAppStrategy.STATE_PARAMETER];
+	delete req.session[WebAppStrategy.CLOUD_DIRECTORY_UPDATE_REQ];
+	req.logout(()=>{
+		res.redirect('/');
+	});
 });
 
 //Serves the identity token payload
@@ -85,7 +91,7 @@ app.listen(port, () => {
 
 function getAppIDConfig() {
 	let config;
-	
+
 	try {
 		// if running locally we'll have the local config file
 		config = require('./localdev-config.json');
@@ -95,7 +101,7 @@ function getAppIDConfig() {
 			config.redirectUri = process.env.redirectUri;
 		} else { // running on CF
 			let vcapApplication = JSON.parse(process.env["VCAP_APPLICATION"]);
-			return {"redirectUri" : "https://" + vcapApplication["application_uris"][0] + CALLBACK_URL};
+			return { "redirectUri": "https://" + vcapApplication["application_uris"][0] + CALLBACK_URL };
 		}
 	}
 	return config;
