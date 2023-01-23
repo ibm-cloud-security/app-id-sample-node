@@ -61,19 +61,15 @@ app.use("/protected", passport.authenticate(WebAppStrategy.STRATEGY_NAME, { sess
 // This will statically serve pages:
 app.use(express.static("public"));
 
-// // This will statically serve the protected page (after authentication, since /protected is a protected area):
+// This will statically serve the protected page (after authentication, since /protected is a protected area):
 app.use('/protected', express.static("protected"));
 
-//Do manually while WebAppStrategy.logout() is being fixed
+// req._sessionManager = false means is set so no callback to req.logout in Passport is required
 app.get("/logout", (req, res) => {
 	//Note: if you enabled SSO for Cloud Directory be sure to use webAppStrategy.logoutSSO instead.
-	delete req.session.returnTo;
-	delete req.session[WebAppStrategy.AUTH_CONTEXT];
-	delete req.session[WebAppStrategy.STATE_PARAMETER];
-	delete req.session[WebAppStrategy.CLOUD_DIRECTORY_UPDATE_REQ];
-	req.logout(()=>{
-		res.redirect('/');
-	});
+	req._sessionManager = false;
+	WebAppStrategy.logout(req);
+	res.redirect("/");
 });
 
 //Serves the identity token payload
