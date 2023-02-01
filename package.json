@@ -11,8 +11,8 @@
     "cfenv": "^1.2.2",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "ibmcloud-appid": "^6.1.1",
+    "ibmcloud-appid": "^7.0.0",
     "jquery.json-viewer": "^1.4.0",
-    "passport": "^0.4.1"
+    "passport": "^0.6.0"
   }
 }
