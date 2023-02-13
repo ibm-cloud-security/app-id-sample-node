@@ -66,7 +66,9 @@ app.use('/protected', express.static("protected"));
 
 app.get("/logout", (req, res) => {
 	//Note: if you enabled SSO for Cloud Directory be sure to use webAppStrategy.logoutSSO instead.
+	req._sessionManager = false;
 	WebAppStrategy.logout(req);
+	res.clearCookie("refreshToken");
 	res.redirect("/");
 });
 
